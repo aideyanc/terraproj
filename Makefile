@@ -7,3 +7,5 @@ cleanup:
 	terraform fmt
 	terraform validate
 
+destroy:
+	terraform destroy -auto-approve
