@@ -199,12 +199,6 @@ resource "aws_security_group" "o4bproject_elk_sg" {
   }
 }
 
-
-
-
-
-
-
 # Create security group rules
 resource "aws_security_group_rule" "o4bproject_ec2_https_out" {
   type              = "egress"

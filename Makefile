@@ -10,7 +10,8 @@ cleanup:
 destroy:
 	terraform destroy -auto-approve
 
-commit:
+commit and push:
 	git status
 	git add .
 	git commit -m "additional code"
+	git push
