@@ -1,0 +1,1 @@
+{"buildTargets":["cleanup","commit","destroy","terraform"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

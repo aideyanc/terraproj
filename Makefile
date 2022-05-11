@@ -9,3 +9,8 @@ cleanup:
 
 destroy:
 	terraform destroy -auto-approve
+
+commit:
+	git status
+	git add .
+	git commit -m "additional code"
