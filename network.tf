@@ -35,24 +35,24 @@ resource "aws_subnet" "o4bproject-public" {
   }
 }
 
-# Create internet gateway for the public subnet
-resource "aws_internet_gateway" "o4bproject-igw" {
-  vpc_id = aws_vpc.o4bproject.id
-
-  tags = {
-    Name        = "o4bproject-igw"
-    Environment = "dev"
-  }
-}
-
 # Create route tables for the subnet
 resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.o4bproject.id
+
+  tags = {
+    Name        = "public-route-table"
+    Environment = "dev"
+  }
 }
 
 # Create route table for the private subnet 
 resource "aws_route_table" "private-route-table" {
   vpc_id = aws_vpc.o4bproject.id
+
+  tags = {
+    Name        = "private-route-table"
+    Environment = "dev"
+  }
 }
 
 # Associate newly created route tables to the subnets
@@ -66,6 +66,16 @@ resource "aws_route_table_association" "private-route-association" {
   subnet_id      = aws_subnet.o4bproject-private.id
 }
 
+# Create internet gateway for the public subnet
+resource "aws_internet_gateway" "o4bproject-igw" {
+  vpc_id = aws_vpc.o4bproject.id
+
+  tags = {
+    Name        = "o4bproject-igw"
+    Environment = "dev"
+  }
+}
+
 # Route public subnet traffic through the internet gateway
 resource "aws_route" "public-internet-gateway-route" {
   route_table_id         = aws_route_table.public-route-table.id
@@ -73,6 +83,7 @@ resource "aws_route" "public-internet-gateway-route" {
   destination_cidr_block = "0.0.0.0/0"
 }
 
+/*
 # Create DHCP options in our VPC
 resource "aws_vpc_dhcp_options" "o4bproject-dhcp" {
   domain_name         = "${var.aws_region}.compute.internal"
@@ -88,6 +99,7 @@ resource "aws_vpc_dhcp_options_association" "o4bproject-dhcp-association" {
   vpc_id          = aws_vpc.o4bproject.id
   dhcp_options_id = aws_vpc_dhcp_options.o4bproject-dhcp.id
 }
+*/
 
 # Create elastic ip
 resource "aws_eip" "o4bproject-eip-nat-gateway" {
@@ -96,6 +108,11 @@ resource "aws_eip" "o4bproject-eip-nat-gateway" {
   depends_on = [
     aws_internet_gateway.o4bproject-igw
   ]
+
+  tags = {
+    Name        = "o4bproject-eip"
+    Environment = "dev"
+  }
 }
 
 # Create NAT gateway
@@ -105,6 +122,11 @@ resource "aws_nat_gateway" "o4bproject-nat-gateway" {
   depends_on = [
     aws_eip.o4bproject-eip-nat-gateway
   ]
+
+  tags = {
+    Name        = "o4bproject-nat-gw"
+    Environment = "dev"
+  }
 }
 
 # Route private subnet traffic through NAT gateway

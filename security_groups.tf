@@ -1,13 +1,27 @@
-# Create security group for the dev environment
-resource "aws_security_group" "o4bproject_dev_sg" {
-  name        = "o4bproject-dev-sg"
-  description = "security group for the o4bproject development environment"
+# Create security group for Internet reaching EC2 Instances
+resource "aws_security_group" "o4bproject_dev_ec2_public_sg" {
+  name        = "o4bproject-dev-ec2-public-sg"
+  description = "security group for Internet facing EC2 instances"
   vpc_id      = aws_vpc.o4bproject.id
 
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "TCP"
+    cidr_blocks = ["3.11.244.82/32", "5.148.137.82/32"]
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "TCP"
+    cidr_blocks = ["3.11.244.82/32", "5.148.137.82/32"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "TCP"
     cidr_blocks = ["3.11.244.82/32", "5.148.137.82/32"]
   }
 
@@ -19,11 +33,43 @@ resource "aws_security_group" "o4bproject_dev_sg" {
   }
 
   tags = {
-    Name        = "o4bproject-dev-sg"
+    Name        = "o4bproject-dev-ec2-public-sg"
     Environment = "dev"
   }
 }
 
+resource "aws_security_group" "o4bproject_dev_ec2_private_sg" {
+  name        = "o4bproject-dev-ec2-private-sg"
+  description = "Only allow publis SG resources to access these instances"
+  vpc_id      = aws_vpc.o4bproject.id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [aws_security_group.o4bproject_dev_ec2_public_sg.id]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow health checking for instances using this SG"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "o4bproject-dev-ec2-private-sg"
+    Environment = "dev"
+  }
+}
 
 # Create security group for outer ALB
 resource "aws_security_group" "o4bproject_outer_alb" {
@@ -62,7 +108,7 @@ resource "aws_security_group" "o4bproject_outer_alb" {
 }
 
 # Create security group for inner ALB
-resource "aws_security_group" "o4bprocject_inner_alb" {
+resource "aws_security_group" "o4bproject_inner_alb" {
   name        = "o4bprocject-inner-alb-sg"
   description = "Security group for inner alb"
   vpc_id      = aws_vpc.o4bproject.id
@@ -89,18 +135,7 @@ resource "aws_security_group" "o4bprocject_inner_alb" {
   }
 }
 
-# Create security group for EC2 Instances
-resource "aws_security_group" "o4bproject_ec2" {
-  name        = "o4bproject-ec2-sg"
-  description = "Security group rules for o4bproject EC2"
-  vpc_id      = aws_vpc.o4bproject.id
-
-  tags = {
-    Name        = "o4bproject-ec2-sg"
-    Environment = "dev"
-  }
-}
-
+/*
 # Create security group and rule for RDS
 resource "aws_security_group" "o4bproject_rds_sg" {
   name        = "o4bproject-rds-sg"
@@ -246,7 +281,7 @@ resource "aws_security_group_rule" "o4bproject_ec2_http_inner" {
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  source_security_group_id = aws_security_group.o4bprocject_inner_alb.id
+  source_security_group_id = aws_security_group.o4bproject_inner_alb.id
   security_group_id        = aws_security_group.o4bproject_ec2.id
 }
 
@@ -259,4 +294,4 @@ resource "aws_security_group_rule" "o4bprocject_ec2_mysql_out" {
   source_security_group_id = aws_security_group.o4bproject_rds_sg.id
   security_group_id        = aws_security_group.o4bproject_ec2.id
 }
-
+*/

@@ -7,17 +7,16 @@ variable "aws_region" {
 variable "vpc_cidr_block" {
   description = "cidr block of VPC"
   type        = string
-  default     = "10.0.0.0/16"
 }
 
 variable "private_subnet_availability_zone" {
-  description = "availability zone of private subnets"
+  description = "availability zone of private subnet"
   type        = string
   default     = "eu-west-1a"
 }
 
 variable "public_subnet_availability_zone" {
-  description = "availability zone of public subnets"
+  description = "availability zone of public subnet"
   type        = string
   default     = "eu-west-1b"
 }
@@ -25,11 +24,56 @@ variable "public_subnet_availability_zone" {
 variable "private_subnet_cidr_block" {
   description = "cidr block of private subnet"
   type        = string
-  default     = "10.0.1.0/24"
 }
 
 variable "public_subnet_cidr_block" {
   description = "cidr block of public subnet"
   type        = string
-  default     = "10.0.2.0/24"
+}
+
+variable "health_check" {
+  description = "file path to log health checks"
+  default     = "~/src/health_checks"
+}
+
+variable "ssl_policy" {
+  description = "ssl policy for the certificate"
+  default     = ""
+}
+
+variable "ec2_instance" {
+  description = "Ec2 instance name and types"
+  default = {
+    varnish = ""
+  }
+}
+
+variable "key_name" {
+  description = "key pair for creating ec2 instances"
+  default     = ""
+}
+
+variable "desired_capacity" {
+  description = "desired instance capacity"
+  default     = 1
+}
+
+variable "min_size" {
+  description = "minimum number of instance to launch"
+  default     = 1
+}
+
+variable "max_size" {
+  description = "maximum number of instances to launch"
+  default     = 2
+}
+
+variable "health_check_grace_period" {
+  description = "Grace period for health checks"
+  default     = 300
+}
+
+variable "health_check_type" {
+  description = "type of health check"
+  default     = "ELB"
 }
