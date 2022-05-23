@@ -32,6 +32,7 @@ resource "aws_security_group" "o4bproject_dev_ec2_public_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+
   tags = {
     Name        = "o4bproject-dev-ec2-public-sg"
     Environment = "dev"
@@ -98,7 +99,7 @@ resource "aws_security_group" "o4bproject_outer_alb" {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = [aws_security_group.o4bproject_ec2.id]
+    security_groups = [aws_security_group.o4bproject_dev_ec2_public_sg.id]
   }
 
   tags = {
@@ -135,7 +136,7 @@ resource "aws_security_group" "o4bproject_inner_alb" {
   }
 }
 
-/*
+
 # Create security group and rule for RDS
 resource "aws_security_group" "o4bproject_rds_sg" {
   name        = "o4bproject-rds-sg"
@@ -294,4 +295,4 @@ resource "aws_security_group_rule" "o4bprocject_ec2_mysql_out" {
   source_security_group_id = aws_security_group.o4bproject_rds_sg.id
   security_group_id        = aws_security_group.o4bproject_ec2.id
 }
-*/
+
