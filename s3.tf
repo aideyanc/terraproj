@@ -1,24 +1,54 @@
-resource "aws_s3_bucket" "example" {
-  bucket = "my-tf-example-bucket"
+# Create log bucket for Outer Load balancer
+
+resource "aws_s3_bucket" "o4bproject_outer_lb_bucket" {
+  bucket = "o4bproject-outer-lb-bucket"
 }
 
-resource "aws_s3_bucket_acl" "example" {
-  bucket = aws_s3_bucket.example.id
+resource "aws_s3_bucket_acl" "o4bproject_outer_lb_bucket_acl" {
+  bucket = aws_s3_bucket.o4bproject_outer_lb_bucket.id
   acl    = "private"
 }
 
-resource "aws_s3_bucket" "o4bproject_outer_alb_log_bucket" {
-  bucket = "my-tf-log-bucket"
+resource "aws_s3_bucket" "o4bproject_outer_lb_log_bucket" {
+  bucket = "o4bproject-outer-lb-bucket"
 }
 
-resource "aws_s3_bucket_acl" "log_bucket_acl" {
-  bucket = aws_s3_bucket.log_bucket.id
+resource "aws_s3_bucket_acl" "o4bproject_outer_lb_log_bucket_acl" {
+  bucket = aws_s3_bucket.o4bproject_outer_lb_log_bucket.id
   acl    = "log-delivery-write"
 }
 
-resource "aws_s3_bucket_logging" "example" {
-  bucket = aws_s3_bucket.example.id
+resource "aws_s3_bucket_logging" "o4bproject_outer_lb_bucket_logs" {
+  bucket = aws_s3_bucket.o4bproject_outer_lb_log_bucket.id
 
-  target_bucket = aws_s3_bucket.log_bucket.id
+  target_bucket = aws_s3_bucket.o4bproject_outer_lb_log_bucket.id
+  target_prefix = "log/"
+}
+
+
+# Create log bucket for Inner Load balancer
+
+resource "aws_s3_bucket" "o4bproject_inner_lb_bucket" {
+  bucket = "o4bproject-inner-lb-bucket"
+}
+
+resource "aws_s3_bucket_acl" "o4bproject_inner_lb_bucket_acl" {
+  bucket = aws_s3_bucket.o4bproject_inner_lb_bucket.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket" "o4bproject_inner_lb_log_bucket" {
+  bucket = "o4bproject-inner-lb-bucket"
+}
+
+resource "aws_s3_bucket_acl" "o4bproject_inner_lb_log_bucket_acl" {
+  bucket = aws_s3_bucket.o4bproject_inner_lb_log_bucket.id
+  acl    = "log-delivery-write"
+}
+
+resource "aws_s3_bucket_logging" "o4bproject_inner_lb_bucket_logs" {
+  bucket = aws_s3_bucket.o4bproject_inner_lb_log_bucket.id
+
+  target_bucket = aws_s3_bucket.o4bproject_inner_lb_log_bucket.id
   target_prefix = "log/"
 }

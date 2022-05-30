@@ -8,7 +8,7 @@ resource "aws_lb" "o4bproject_outer_alb" {
   enable_deletion_protection = false
 
   access_logs {
-    bucket  = aws_s3_bucket.o4bproject_outer_lb_logs.bucket
+    bucket  = aws_s3_bucket.o4bproject_outer_lb_log_bucket.id
     prefix  = "o4bproject-outer-alb"
     enabled = true
   }
@@ -19,101 +19,39 @@ resource "aws_lb" "o4bproject_outer_alb" {
   }
 }
 
-listener {
-  instance_port     = 80
-  instance_protocol = "HTTP"
-  lb_port           = 80
-  lb_protocol       = "HTTP"
-}
-
-health_check {
-  healthy_threshold   = 5
-  interval            = 30
-  target              = "HTTP:80"
-  timeout             = 10
-  unhealthy_threshold = 5
-}
-
-
-
-
-resource "aws_lb" "o4bproject_inner_alb" {
-  name               = "o4bproject-inner-alb"
-  internal           = true
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.o4bproject_inner_alb.id]
-  subnets            = [aws_subnet.o4bproject-private.id]
-
-  enable_deletion_protection = false
-
-  access_logs {
-    bucket  = aws_s3_bucket.o4bproject_inner_lb_logs.bucket
-    prefix  = "o4bproject-inner-alb"
-    enabled = true
-  }
-
-  tags = {
-    Name        = "o4bproject-inner-alb"
-    Environment = "dev"
-  }
-}
-
-listener {
-  instance_port     = 80
-  instance_protocol = "HTTP"
-  lb_port           = 80
-  lb_protocol       = "HTTP"
-}
-
-health_check {
-  healthy_threshold   = 5
-  interval            = 30
-  target              = "HTTP:80"
-  timeout             = 10
-  unhealthy_threshold = 5
-}
-
 # Create target group for Outer Load Balancer
-resource "aws_lb_target_group" "o4bproject_outer_alb_tg" {
-  name     = "o4bproject-outer-alb-tg"
+resource "aws_lb_target_group" "o4bproject_outer_alb" {
+  name     = "o4bproject-outer-alb"
   port     = 80
   protocol = "http"
   vpc_id   = aws_vpc.o4bproject.id
 
   health_check {
-    path = var.health_check
+    enabled             = true
+    path                = var.health_check
+    port                = 80
+    healthy_threshold   = 3
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 30
+    matcher             = 200
   }
 }
 
-# Create target group for Inner Load Balancer
-resource "aws_lb_target_group" "o4bproject_inner_alb_tg" {
-  name     = "o4bproject-inner-alb-tg"
-  port     = 80
-  protocol = "http"
-  vpc_id   = aws_vpc.o4bproject.id
-
-  health_check {
-    path = var.health_check
-  }
-}
-# Create http://listener for Outer Load Balancer - forward to varnish
-resource "aws_lb_listener" "o4bproject_outer_alb_http" {
-  depends_on = [
-    aws_acm_certificate_validation.default
-  ]
+# Create http listener for Outer Load Balancer - forward to varnish
+resource "aws_lb_listener" "o4bproject_outer_alb" {
   load_balancer_arn = aws_lb.o4bproject_outer_alb.arn
   port              = "80"
   protocol          = "HTTP"
-  ssl_policy        = var.ssl_policy
-  certificate_arn   = aws_acm_certificate.default.arn
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.o4bproject_outer_alb_tg.arn
+    target_group_arn = aws_lb_target_group.o4bproject_outer_alb.arn
   }
 }
 
-# Create https://listener for Outer Load Balancer - redirect to http://
+/*
+# Create https listener for Outer Load Balancer 
 resource "aws_lb_listener" "o4bproject_outer_alb_https" {
   depends_on = [
     aws_acm_certificate_validation.default
@@ -132,5 +70,60 @@ resource "aws_lb_listener" "o4bproject_outer_alb_https" {
       status_code = "HTTP_301"
     }
     target_group_arn = aws_lb_target_group.o4bproject_outer_alb_tg.arn
+  }
+}
+*/
+
+
+resource "aws_lb" "o4bproject_inner_alb" {
+  name               = "o4bproject-inner-alb"
+  internal           = true
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.o4bproject_inner_alb.id]
+  subnets            = [aws_subnet.o4bproject-private.id]
+
+  enable_deletion_protection = false
+
+  access_logs {
+    bucket  = aws_s3_bucket.o4bproject_inner_lb_log_bucket.id
+    prefix  = "o4bproject-inner-alb"
+    enabled = true
+  }
+
+  tags = {
+    Name        = "o4bproject-inner-alb"
+    Environment = "dev"
+  }
+}
+
+
+# Create target group for Inner Load Balancer
+resource "aws_lb_target_group" "o4bproject_inner_alb" {
+  name     = "o4bproject-inner-alb"
+  port     = 80
+  protocol = "http"
+  vpc_id   = aws_vpc.o4bproject.id
+
+  health_check {
+    enabled             = true
+    path                = var.health_check
+    port                = 80
+    healthy_threshold   = 3
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 30
+    matcher             = 200
+  }
+}
+
+# Create http listener for Inner Load Balancer - forward to varnish
+resource "aws_lb_listener" "o4bproject_inner_alb" {
+  load_balancer_arn = aws_lb.o4bproject_inner_alb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.o4bproject_inner_alb.arn
   }
 }

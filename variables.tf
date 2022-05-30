@@ -41,10 +41,11 @@ variable "ssl_policy" {
   default     = ""
 }
 
-variable "ec2_instance" {
+variable "ec2_instance_type" {
   description = "Ec2 instance name and types"
   default = {
     varnish = ""
+    Magento = ""
   }
 }
 
@@ -76,4 +77,32 @@ variable "health_check_grace_period" {
 variable "health_check_type" {
   description = "type of health check"
   default     = "ELB"
+}
+
+variable "owners" {
+  description = "AWS account owner's ID"
+  default     = "834177416320"
+}
+
+variable "rds" {
+  description = "Map rds configuration values"
+  default = {
+    db_name = "o4bproject-db"
+    allocated_storage = 10
+    max_allocated_storage = 20
+    storage_encrypted = true
+    engine = "mysql"
+    engine_version = "5.7.0"
+    instance_class = "db.c5d.2xlarge"
+    username = ""
+    password = ""
+    parameter_group_name = "default.mysql5.7"
+    skip_final_snapshot = true
+    enable_deletion_protection = true
+    backup_retention_period = "0"
+    performance_insights_enabled = true
+    copy_tags_to_snapshot = true
+    multi_az = false
+  }
+  
 }

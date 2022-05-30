@@ -127,7 +127,7 @@ resource "aws_security_group" "o4bproject_inner_alb" {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    security_groups = [aws_security_group.o4bproject_ec2.id]
+    security_groups = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
   }
 
   tags = {
@@ -148,7 +148,7 @@ resource "aws_security_group" "o4bproject_rds_sg" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [aws_security_group.o4bproject_ec2.id]
+    security_groups = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
   }
 
   tags = {
@@ -168,7 +168,15 @@ resource "aws_security_group" "o4bproject_redis_sg" {
     from_port       = 6379
     to_port         = 6379
     protocol        = "tcp"
-    security_groups = [aws_security_group.o4bproject_ec2.id]
+    security_groups = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
+  }
+
+  egress {
+    description     = "Allow all outbound traffic to EC2 port from Redis cluster"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
   }
 
   tags = {
@@ -189,7 +197,7 @@ resource "aws_security_group" "o4bproject_efs_sg" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_security_group.o4bproject_ec2.id]
+    security_groups = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
   }
 
   egress {
@@ -197,7 +205,7 @@ resource "aws_security_group" "o4bproject_efs_sg" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_security_group.o4bproject_ec2.id]
+    security_groups = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
   }
 
   tags = {
@@ -218,7 +226,7 @@ resource "aws_security_group" "o4bproject_elk_sg" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_security_group.o4bproject_ec2.id]
+    security_groups = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
   }
 
   egress {
@@ -226,7 +234,7 @@ resource "aws_security_group" "o4bproject_elk_sg" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_security_group.o4bproject_ec2.id]
+    security_groups = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
   }
 
   tags = {
@@ -243,17 +251,17 @@ resource "aws_security_group_rule" "o4bproject_ec2_https_out" {
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.o4bproject_ec2.id
+  security_group_id = aws_security_group.o4bproject_dev_ec2_public_sg.id
 }
 
 resource "aws_security_group_rule" "o4bproject_ec2_http_out" {
   type              = "egress"
-  description       = "Allow outbound traffic on the instance https port"
+  description       = "Allow outbound traffic on the instance http port"
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.o4bproject_ec2.id
+  security_group_id = aws_security_group.o4bproject_dev_ec2_public_sg.id
 }
 
 resource "aws_security_group_rule" "o4bproject_ec2_http_in_ec2" {
@@ -262,8 +270,8 @@ resource "aws_security_group_rule" "o4bproject_ec2_http_in_ec2" {
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  source_security_group_id = aws_security_group.o4bproject_ec2.id
-  security_group_id        = aws_security_group.o4bproject_ec2.id
+  source_security_group_id = aws_security_group.o4bproject_dev_ec2_public_sg.id
+  security_group_id        = aws_security_group.o4bproject_dev_ec2_private_sg.id
 }
 
 resource "aws_security_group_rule" "o4bproject_ec2_http_outer" {
@@ -273,7 +281,7 @@ resource "aws_security_group_rule" "o4bproject_ec2_http_outer" {
   to_port                  = 80
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.o4bproject_outer_alb.id
-  security_group_id        = aws_security_group.o4bproject_ec2.id
+  security_group_id        = aws_security_group.o4bproject_dev_ec2_private_sg.id
 }
 
 resource "aws_security_group_rule" "o4bproject_ec2_http_inner" {
@@ -283,7 +291,7 @@ resource "aws_security_group_rule" "o4bproject_ec2_http_inner" {
   to_port                  = 80
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.o4bproject_inner_alb.id
-  security_group_id        = aws_security_group.o4bproject_ec2.id
+  security_group_id        = aws_security_group.o4bproject_dev_ec2_private_sg.id
 }
 
 resource "aws_security_group_rule" "o4bprocject_ec2_mysql_out" {
@@ -293,6 +301,6 @@ resource "aws_security_group_rule" "o4bprocject_ec2_mysql_out" {
   to_port                  = 3306
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.o4bproject_rds_sg.id
-  security_group_id        = aws_security_group.o4bproject_ec2.id
+  security_group_id        = aws_security_group.o4bproject_dev_ec2_private_sg.id
 }
 

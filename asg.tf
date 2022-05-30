@@ -1,6 +1,7 @@
 # Create launch configuration for Auto scaling group
 data "aws_ami" "launch_config_ami" {
   most_recent = true
+  owners      = [var.owners]
 
   filter {
     name   = "owner-alias"
@@ -11,7 +12,7 @@ data "aws_ami" "launch_config_ami" {
 # Create private launch configuration for Auto scaling group
 resource "aws_launch_configuration" "o4bproject_ec2_private_launch_configuration" {
   image_id                    = data.aws_ami.launch_config_ami.id
-  instance_type               = var.ec2_instance
+  instance_type               = var.ec2_instance_type
   key_name                    = var.key_name
   associate_public_ip_address = false
   iam_instance_profile        = aws_iam_instance_profile.o4bproject_ec2_iam_instance_profile.name
