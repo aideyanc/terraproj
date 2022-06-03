@@ -11,29 +11,31 @@ variable "vpc_cidr_block" {
 
 variable "private_subnet_availability_zone" {
   description = "availability zone of private subnet"
-  type        = string
-  default     = "eu-west-1a"
+  type        = list(string)
+  default     = ["eu-west-1a", "eu-west-1b"]
 }
 
 variable "public_subnet_availability_zone" {
   description = "availability zone of public subnet"
-  type        = string
-  default     = "eu-west-1b"
+  type        = list(string)
+  default     = ["eu-west-1a", "eu-west-1b"]
 }
 
 variable "private_subnet_cidr_block" {
   description = "cidr block of private subnet"
-  type        = string
+  type        = list(string)
+  default     = ["10.0.3.0/24", "10.0.4.0/24"]
 }
 
 variable "public_subnet_cidr_block" {
   description = "cidr block of public subnet"
-  type        = string
+  type        = list(string)
+  default     = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 variable "health_check" {
   description = "file path to log health checks"
-  default     = "~/src/health_checks"
+  default     = "/~/src/health_checks"
 }
 
 variable "ssl_policy" {
@@ -44,8 +46,8 @@ variable "ssl_policy" {
 variable "ec2_instance_type" {
   description = "Ec2 instance name and types"
   default = {
-    varnish = ""
-    Magento = ""
+    varnish = "c4.xlarge"
+    magento = "m6a.large"
   }
 }
 
@@ -81,28 +83,34 @@ variable "health_check_type" {
 
 variable "owners" {
   description = "AWS account owner's ID"
-  default     = "834177416320"
+  default     = ["self"]
 }
 
 variable "rds" {
   description = "Map rds configuration values"
   default = {
-    db_name = "o4bproject-db"
-    allocated_storage = 10
-    max_allocated_storage = 20
-    storage_encrypted = true
-    engine = "mysql"
-    engine_version = "5.7.0"
-    instance_class = "db.c5d.2xlarge"
-    username = ""
-    password = ""
-    parameter_group_name = "default.mysql5.7"
-    skip_final_snapshot = true
-    enable_deletion_protection = true
-    backup_retention_period = "0"
+    db_name                      = "o4bproject-db"
+    allocated_storage            = 10
+    max_allocated_storage        = 20
+    storage_encrypted            = true
+    engine                       = "mysql"
+    engine_version               = "5.7.0"
+    instance_class               = "db."
+    username                     = "username"
+    password                     = "password"
+    parameter_group_name         = "default.mysql5.7"
+    skip_final_snapshot          = true
+    deletion_protection          = false
+    backup_retention_period      = "0"
     performance_insights_enabled = true
-    copy_tags_to_snapshot = true
-    multi_az = false
+    copy_tags_to_snapshot        = true
+    multi_az                     = false
   }
-  
+
+}
+
+variable "item_count" {
+  description = "default count parameter used to set AZs and instances"
+  type        = number
+  default     = 2
 }

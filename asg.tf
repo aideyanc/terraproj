@@ -1,18 +1,19 @@
 # Create launch configuration for Auto scaling group
-data "aws_ami" "launch_config_ami" {
+data "aws_ami" "launch_configuration_ami" {
   most_recent = true
-  owners      = [var.owners]
+  owners      = var.owners
+
 
   filter {
-    name   = "owner-alias"
-    values = ["amazon"]
+    name   = "root-device-type"
+    values = ["ebs"]
   }
 }
 
 # Create private launch configuration for Auto scaling group
 resource "aws_launch_configuration" "o4bproject_ec2_private_launch_configuration" {
-  image_id                    = data.aws_ami.launch_config_ami.id
-  instance_type               = var.ec2_instance_type
+  image_id                    = data.aws_ami.launch_configuration_ami.id
+  instance_type               = var.ec2_instance_type["magento"]
   key_name                    = var.key_name
   associate_public_ip_address = false
   iam_instance_profile        = aws_iam_instance_profile.o4bproject_ec2_iam_instance_profile.name
@@ -26,7 +27,7 @@ resource "aws_launch_configuration" "o4bproject_ec2_private_launch_configuration
 # Create Auto scaling group for private subnet
 resource "aws_autoscaling_group" "o4bproject_private_asg" {
   name                      = "o4bproject-private-asg"
-  vpc_zone_identifier       = [aws_subnet.o4bproject-private.id]
+  vpc_zone_identifier       = [aws_subnet.o4bproject-private[0].id, aws_subnet.o4bproject-private[1].id]
   desired_capacity          = var.desired_capacity
   min_size                  = var.min_size
   max_size                  = var.max_size

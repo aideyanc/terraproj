@@ -18,5 +18,5 @@ commit:
 push:
 	git status
 	git add .
-	git commit -m "a few modifications to security groups, variables, provider, asg, S3 and a few additions including magento and varnish instances"
+	git commit -m "a few modifications applied"
 	git push

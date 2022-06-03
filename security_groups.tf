@@ -45,10 +45,10 @@ resource "aws_security_group" "o4bproject_dev_ec2_private_sg" {
   vpc_id      = aws_vpc.o4bproject.id
 
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = [aws_security_group.o4bproject_dev_ec2_public_sg.id]
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    security_groups = [aws_security_group.o4bproject_dev_ec2_public_sg.id]
   }
 
   ingress {

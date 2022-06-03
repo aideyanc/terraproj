@@ -13,24 +13,26 @@ resource "aws_vpc" "o4bproject" {
 
 # Create private subnet
 resource "aws_subnet" "o4bproject-private" {
+  count             = var.item_count
   vpc_id            = aws_vpc.o4bproject.id
-  availability_zone = var.private_subnet_availability_zone
-  cidr_block        = var.private_subnet_cidr_block
+  availability_zone = var.private_subnet_availability_zone[count.index]
+  cidr_block        = var.private_subnet_cidr_block[count.index]
 
   tags = {
-    Name        = "o4bproject-private-subnet"
+    Name        = "o4bproject-private-subnet-${count.index}"
     Environment = "dev"
   }
 }
 
 # Create public subnet
 resource "aws_subnet" "o4bproject-public" {
+  count             = var.item_count
   vpc_id            = aws_vpc.o4bproject.id
-  availability_zone = var.public_subnet_availability_zone
-  cidr_block        = var.public_subnet_cidr_block
+  availability_zone = var.public_subnet_availability_zone[count.index]
+  cidr_block        = var.public_subnet_cidr_block[count.index]
 
   tags = {
-    Name        = "o4bproject-public-subnet"
+    Name        = "o4bproject-public-subnet-${count.index}"
     Environment = "dev"
   }
 }
@@ -58,12 +60,12 @@ resource "aws_route_table" "private-route-table" {
 # Associate newly created route tables to the subnets
 resource "aws_route_table_association" "public-route-association" {
   route_table_id = aws_route_table.public-route-table.id
-  subnet_id      = aws_subnet.o4bproject-public.id
+  subnet_id      = [aws_subnet.o4bproject-public[0].id][aws_subnet.o4bproject-public[1].id]
 }
 
 resource "aws_route_table_association" "private-route-association" {
   route_table_id = aws_route_table.private-route-table.id
-  subnet_id      = aws_subnet.o4bproject-private.id
+  subnet_id      = [aws_subnet.o4bproject-private[0].id][aws_subnet.o4bproject-private[1].id]
 }
 
 # Create internet gateway for the public subnet
@@ -118,7 +120,7 @@ resource "aws_eip" "o4bproject-eip-nat-gateway" {
 # Create NAT gateway
 resource "aws_nat_gateway" "o4bproject-nat-gateway" {
   allocation_id = aws_eip.o4bproject-eip-nat-gateway.id
-  subnet_id     = aws_subnet.o4bproject-public.id
+  subnet_id     = [aws_subnet.o4bproject-public[0].id][aws_subnet.o4bproject-public[1].id]
   depends_on = [
     aws_eip.o4bproject-eip-nat-gateway
   ]

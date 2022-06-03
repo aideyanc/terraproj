@@ -6,8 +6,11 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
+make: *** No rule to make target `all'.  Stop.
 
-# Make data base, printed on Fri May 27 08:56:07 2022
+
+# Make data base, printed on Tue May 31 05:37:51 2022
 
 # Variables
 
@@ -32,6 +35,7 @@ VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupp
 # environment
 _ = /usr/bin/make
 # automatic
+ 
 ?D = $(patsubst %/,%,$(dir $?))
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
@@ -40,11 +44,13 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/ww/zh8rndwx4l997qp6bjw8f_900000gp/T/vscode-ipc-cd0fe274-ad0e-4293-91e6-c0e058f7b023.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/ww/zh8rndwx4l997qp6bjw8f_900000gp/T/vscode-ipc-4d2fa614-96ec-47c5-91c4-4696d42a6d88.sock
 # environment
 VSCODE_CWD = /
 # environment
 PATH = /usr/local/opt/coreutils/libexec/gnubin:/Users/carltonaideyan/.nodenv/shims:/Users/carltonaideyan/.nodenv/shims:/Users/carltonaideyan/.nodenv/bin:/Users/carltonaideyan/.strap/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+# environment
+LaunchInstanceID = F73AA793-DD53-434D-A541-B017307041D2
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -52,7 +58,7 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.mF1z9bdO4y/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.PH2aN6a3XV/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -127,6 +133,8 @@ MAKEFILES :=
 HOMEBREW_BUNDLE_NO_LOCK = 1
 # environment
 LC_ALL = C
+# environment
+SECURITYSESSIONID = 186a5
 # automatic
 ^F = $(notdir $^)
 # default
@@ -138,11 +146,11 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 907
+VSCODE_PID = 1507
 # environment
 COMPOSER_MEMORY_LIMIT = -1
 # variable set hash-table stats:
-# Load=65/1024=6%, Rehash=0, Collisions=2/89=2%
+# Load=67/1024=7%, Rehash=0, Collisions=2/91=2%
 
 # Pattern-specific Variable Values
 
@@ -150,9 +158,9 @@ COMPOSER_MEMORY_LIMIT = -1
 
 # Directories
 
-# . (device 16777226, inode 1287779): 24 files, no impossibilities.
+# . (device 16777220, inode 1287779): 28 files, no impossibilities.
 
-# 24 files, no impossibilities in 1 directories.
+# 28 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -201,14 +209,14 @@ push:
 #  commands to execute (from `Makefile', line 19):
 	git status
 	git add .
-	git commit -m "additional code"
+	git commit -m "a few modifications to security groups, variables, provider, asg, S3 and a few additions including magento and varnish instances"
 	git push
 	
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-12 00:49:33
+#  Last modified 2022-05-30 01:36:42
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -251,8 +259,6 @@ destroy:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri May 27 08:56:07 2022
+# Finished Make data base on Tue May 31 05:37:51 2022
 
  
-make: *** No rule to make target `all'.  Stop.
-
