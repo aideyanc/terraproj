@@ -1,6 +1,6 @@
 # Create EC2 service role
 resource "aws_iam_role" "o4bproject_ec2_iam_role" {
-  name = "o4bproject-ec2-iam-role"
+  name = "AmpDevO4b-ec2-iam-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -17,14 +17,14 @@ resource "aws_iam_role" "o4bproject_ec2_iam_role" {
   })
 
   tags = {
-    Name        = "o4bproject-ec2-iam-role"
+    Name        = "AmpDevO4b-ec2-iam-role"
     Environment = "dev"
   }
 }
 
 # Create EC2 IAM role policy
 resource "aws_iam_role_policy" "o4bproject_ec2_iam_role_policy" {
-  name = "o4bproject-ec2-iam-policy"
+  name = "AmpDevO4b-ec2-iam-policy"
   role = aws_iam_role.o4bproject_ec2_iam_role.id
 
   policy = jsonencode({
@@ -35,6 +35,7 @@ resource "aws_iam_role_policy" "o4bproject_ec2_iam_role_policy" {
           "ec2:*",
           "elasticloadbalancing:*",
           "cloudwatch:*",
+          "autoscalinggroup:*",
           "logs:*"
         ]
         Effect   = "Allow"
@@ -46,7 +47,7 @@ resource "aws_iam_role_policy" "o4bproject_ec2_iam_role_policy" {
 
 # Create EC2 IAM Instance profile
 resource "aws_iam_instance_profile" "o4bproject_ec2_iam_instance_profile" {
-  name = "o4bproject-ec2-iam-instance-profile"
+  name = "AmpDevO4b-ec2-iam-instance-profile"
   role = aws_iam_role.o4bproject_ec2_iam_role.id
 }
 

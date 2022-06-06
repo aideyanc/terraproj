@@ -6,7 +6,7 @@ resource "aws_vpc" "o4bproject" {
   enable_dns_hostnames = true
 
   tags = {
-    Name        = "o4bproject-vpc"
+    Name        = "AmpDevO4b-vpc"
     Environment = "dev"
   }
 }
@@ -19,7 +19,7 @@ resource "aws_subnet" "o4bproject-private" {
   cidr_block        = var.private_subnet_cidr_block[count.index]
 
   tags = {
-    Name        = "o4bproject-private-subnet-${count.index}"
+    Name        = "AmpDevO4b-private-subnet-${count.index}"
     Environment = "dev"
   }
 }
@@ -32,7 +32,7 @@ resource "aws_subnet" "o4bproject-public" {
   cidr_block        = var.public_subnet_cidr_block[count.index]
 
   tags = {
-    Name        = "o4bproject-public-subnet-${count.index}"
+    Name        = "AmpDevO4b-public-subnet-${count.index}"
     Environment = "dev"
   }
 }
@@ -42,7 +42,7 @@ resource "aws_route_table" "public-route-table" {
   vpc_id = aws_vpc.o4bproject.id
 
   tags = {
-    Name        = "public-route-table"
+    Name        = "AmpDevO4b-public-route-table"
     Environment = "dev"
   }
 }
@@ -52,20 +52,22 @@ resource "aws_route_table" "private-route-table" {
   vpc_id = aws_vpc.o4bproject.id
 
   tags = {
-    Name        = "private-route-table"
+    Name        = "AmpDevO4b-private-route-table"
     Environment = "dev"
   }
 }
 
 # Associate newly created route tables to the subnets
 resource "aws_route_table_association" "public-route-association" {
+  count          = var.item_count
   route_table_id = aws_route_table.public-route-table.id
-  subnet_id      = [aws_subnet.o4bproject-public[0].id][aws_subnet.o4bproject-public[1].id]
+  subnet_id      = aws_subnet.o4bproject-public[count.index].id
 }
 
 resource "aws_route_table_association" "private-route-association" {
+  count          = var.item_count
   route_table_id = aws_route_table.private-route-table.id
-  subnet_id      = [aws_subnet.o4bproject-private[0].id][aws_subnet.o4bproject-private[1].id]
+  subnet_id      = aws_subnet.o4bproject-private[count.index].id
 }
 
 # Create internet gateway for the public subnet
@@ -73,7 +75,7 @@ resource "aws_internet_gateway" "o4bproject-igw" {
   vpc_id = aws_vpc.o4bproject.id
 
   tags = {
-    Name        = "o4bproject-igw"
+    Name        = "AmpDevO4b-igw"
     Environment = "dev"
   }
 }
@@ -107,12 +109,10 @@ resource "aws_vpc_dhcp_options_association" "o4bproject-dhcp-association" {
 resource "aws_eip" "o4bproject-eip-nat-gateway" {
   vpc                       = true
   associate_with_private_ip = "172.19.1.167"
-  depends_on = [
-    aws_internet_gateway.o4bproject-igw
-  ]
+  depends_on                = [aws_internet_gateway.o4bproject-igw]
 
   tags = {
-    Name        = "o4bproject-eip"
+    Name        = "AmpDevO4b-eip"
     Environment = "dev"
   }
 }
@@ -120,20 +120,20 @@ resource "aws_eip" "o4bproject-eip-nat-gateway" {
 # Create NAT gateway
 resource "aws_nat_gateway" "o4bproject-nat-gateway" {
   allocation_id = aws_eip.o4bproject-eip-nat-gateway.id
-  subnet_id     = [aws_subnet.o4bproject-public[0].id][aws_subnet.o4bproject-public[1].id]
-  depends_on = [
-    aws_eip.o4bproject-eip-nat-gateway
-  ]
+  count         = var.item_count
+  subnet_id     = aws_subnet.o4bproject-public[count.index].id
+  depends_on    = [aws_eip.o4bproject-eip-nat-gateway]
 
   tags = {
-    Name        = "o4bproject-nat-gw"
+    Name        = "AmpDevO4b-nat-gw"
     Environment = "dev"
   }
 }
 
 # Route private subnet traffic through NAT gateway
 resource "aws_route" "o4bproject-nat-gateway-route" {
+  count = var.item_count
   route_table_id         = aws_route_table.private-route-table.id
-  nat_gateway_id         = aws_nat_gateway.o4bproject-nat-gateway.id
+  nat_gateway_id         = aws_nat_gateway.o4bproject-nat-gateway[count.index].id
   destination_cidr_block = "0.0.0.0/0"
 }

@@ -1,27 +1,27 @@
 resource "aws_lb" "o4bproject_outer_alb" {
-  name               = "o4bproject-outer-alb"
+  name               = "AmpDevO4b-outer-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.o4bproject_outer_alb.id]
   subnets            = [aws_subnet.o4bproject-public[0].id, aws_subnet.o4bproject-public[1].id]
 
   enable_deletion_protection = false
-
+/*
   access_logs {
     bucket  = aws_s3_bucket.o4bproject_outer_lb_bucket.id
-    prefix  = "o4bproject-outer-alb"
+    prefix  = "AmpDevO4b-outer-alb"
     enabled = true
   }
-
+*/
   tags = {
-    Name        = "o4bproject-outer-alb"
+    Name        = "AmpDevO4b-outer-alb"
     Environment = "dev"
   }
 }
 
 # Create target group for Outer Load Balancer
 resource "aws_lb_target_group" "o4bproject_outer_alb" {
-  name     = "o4bproject-outer-alb"
+  name     = "AmpDevO4b-outer-alb"
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.o4bproject.id
@@ -41,7 +41,7 @@ resource "aws_lb_target_group" "o4bproject_outer_alb" {
 # Create http listener for Outer Load Balancer - forward to varnish
 resource "aws_lb_listener" "o4bproject_outer_alb" {
   load_balancer_arn = aws_lb.o4bproject_outer_alb.arn
-  port              = "80"
+  port              = 80
   protocol          = "HTTP"
 
   default_action {
@@ -76,22 +76,23 @@ resource "aws_lb_listener" "o4bproject_outer_alb_https" {
 
 
 resource "aws_lb" "o4bproject_inner_alb" {
-  name               = "o4bproject-inner-alb"
+  name               = "AmpDevO4b-inner-alb"
   internal           = true
   load_balancer_type = "application"
   security_groups    = [aws_security_group.o4bproject_inner_alb.id]
   subnets            = [aws_subnet.o4bproject-private[0].id, aws_subnet.o4bproject-private[1].id]
 
   enable_deletion_protection = false
-
+/*
   access_logs {
     bucket  = aws_s3_bucket.o4bproject_inner_lb_bucket.id
-    prefix  = "o4bproject-inner-alb"
+    prefix  = "AmpDevO4b-inner-alb"
     enabled = true
   }
+*/
 
   tags = {
-    Name        = "o4bproject-inner-alb"
+    Name        = "AmpDevO4b-inner-alb"
     Environment = "dev"
   }
 }
@@ -99,7 +100,7 @@ resource "aws_lb" "o4bproject_inner_alb" {
 
 # Create target group for Inner Load Balancer
 resource "aws_lb_target_group" "o4bproject_inner_alb" {
-  name     = "o4bproject-inner-alb"
+  name     = "AmpDevO4b-inner-alb"
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.o4bproject.id
@@ -119,7 +120,7 @@ resource "aws_lb_target_group" "o4bproject_inner_alb" {
 # Create http listener for Inner Load Balancer - forward to varnish
 resource "aws_lb_listener" "o4bproject_inner_alb" {
   load_balancer_arn = aws_lb.o4bproject_inner_alb.arn
-  port              = "80"
+  port              = 80
   protocol          = "HTTP"
 
   default_action {

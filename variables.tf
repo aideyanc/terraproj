@@ -89,16 +89,16 @@ variable "owners" {
 variable "rds" {
   description = "Map rds configuration values"
   default = {
-    db_name                      = "o4bproject-db"
+    db_name                      = "ampdevo4b"
     allocated_storage            = 10
     max_allocated_storage        = 20
     storage_encrypted            = true
     engine                       = "mysql"
-    engine_version               = "5.7.0"
-    instance_class               = "db."
+    engine_version               = "8.0.28"
+    instance_class               = "db.m6g.large"
     username                     = "username"
     password                     = "password"
-    parameter_group_name         = "default.mysql5.7"
+    parameter_group_name         = "default.mysql8.0"
     skip_final_snapshot          = true
     deletion_protection          = false
     backup_retention_period      = "0"

@@ -17,16 +17,16 @@ resource "aws_db_instance" "o4bproject_db" {
   multi_az                     = var.rds["multi_az"]
 
   tags = {
-    Name        = "o4bproject-rds"
+    Name        = "AmpDevO4b-rds"
     Environment = "dev"
   }
 }
 
 resource "aws_db_subnet_group" "o4bproject_db_subnet_group" {
-  name       = "o4bproject_db"
+  name       = "ampdevo4b_db"
   subnet_ids = [aws_subnet.o4bproject-private[0].id, aws_subnet.o4bproject-private[1].id]
 
   tags = {
-    Name = "o4bproject-db-subnet-group"
+    Name = "AmpDevO4b-db-subnet-group"
   }
 }

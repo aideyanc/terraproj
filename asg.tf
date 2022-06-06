@@ -3,7 +3,6 @@ data "aws_ami" "launch_configuration_ami" {
   most_recent = true
   owners      = var.owners
 
-
   filter {
     name   = "root-device-type"
     values = ["ebs"]
@@ -26,7 +25,7 @@ resource "aws_launch_configuration" "o4bproject_ec2_private_launch_configuration
 
 # Create Auto scaling group for private subnet
 resource "aws_autoscaling_group" "o4bproject_private_asg" {
-  name                      = "o4bproject-private-asg"
+  name                      = "AmpDevO4b-private-asg"
   vpc_zone_identifier       = [aws_subnet.o4bproject-private[0].id, aws_subnet.o4bproject-private[1].id]
   desired_capacity          = var.desired_capacity
   min_size                  = var.min_size
@@ -34,7 +33,7 @@ resource "aws_autoscaling_group" "o4bproject_private_asg" {
   launch_configuration      = aws_launch_configuration.o4bproject_ec2_private_launch_configuration.name
   health_check_grace_period = var.health_check_grace_period
   health_check_type         = var.health_check_type
-  load_balancers            = [aws_lb.o4bproject_inner_alb.name]
+  load_balancers            = [aws_lb.o4bproject_inner_alb.arn]
 
   lifecycle {
     create_before_destroy = true
@@ -43,13 +42,13 @@ resource "aws_autoscaling_group" "o4bproject_private_asg" {
   tag {
     key                 = "Name"
     propagate_at_launch = false
-    value               = "o4bproject-private-asg"
+    value               = "AmpDevO4b-private-asg"
   }
 }
 
 # Create autoscaling policy for scaleout
 resource "aws_autoscaling_policy" "o4bproject_asg_scaleout_policy" {
-  name                   = "o4bproject-asg-scaleout-policy"
+  name                   = "AmpDevO4b-asg-scaleout-policy"
   autoscaling_group_name = aws_autoscaling_group.o4bproject_private_asg.name
   policy_type            = "SimpleScaling"
   adjustment_type        = "ChangeInCapacity"
@@ -59,7 +58,7 @@ resource "aws_autoscaling_policy" "o4bproject_asg_scaleout_policy" {
 
 # Create autoscaling policy for scalein
 resource "aws_autoscaling_policy" "o4bproject_asg_scalein_policy" {
-  name                   = "o4bproject-asg-scalein-policy"
+  name                   = "AmpDevO4b-asg-scalein-policy"
   autoscaling_group_name = aws_autoscaling_group.o4bproject_private_asg.name
   policy_type            = "SimpleScaling"
   adjustment_type        = "ChangeInCapacity"
@@ -69,7 +68,7 @@ resource "aws_autoscaling_policy" "o4bproject_asg_scalein_policy" {
 
 # Create cloudwatch alarm metric to execute ASG policy for scaleout
 resource "aws_cloudwatch_metric_alarm" "o4bproject_asg_scaleout_alarm" {
-  alarm_name          = "to4bproject-asg-scaleout-alarm"
+  alarm_name          = "AmpDevO4b-asg-scaleout-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -88,7 +87,7 @@ resource "aws_cloudwatch_metric_alarm" "o4bproject_asg_scaleout_alarm" {
 
 # Create cloudwatch alarm metric to execute ASG policy for scalein
 resource "aws_cloudwatch_metric_alarm" "o4bproject_asg_scalein_alarm" {
-  alarm_name          = "to4bproject-asg-scalein-alarm"
+  alarm_name          = "AmpDevO4b-asg-scalein-alarm"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
