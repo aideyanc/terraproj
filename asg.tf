@@ -18,9 +18,91 @@ resource "aws_launch_configuration" "o4bproject_ec2_private_launch_configuration
   iam_instance_profile        = aws_iam_instance_profile.o4bproject_ec2_iam_instance_profile.name
   security_groups             = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
 
+  root_block_device {
+    volume_type = "gp2"
+    volume_size = 20
+    encrypted = true
+  }
+
+  ebs_block_device {
+    device_name = "/dev/sdf"
+    volume_type = "gp2"
+    volume_size = 10
+    encrypted = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
   user_data = <<EOF
 
   EOF
+}
+
+# Create a launch template for the Auto scaling group
+resource "aws_launch_template" "o4bproject_ec2_launch_template" {
+  name = "ampdev-ec2-launch-template"
+
+  block_device_mappings {
+    device_name = "/dev/sda1"
+
+    ebs {
+      volume_size = 20
+    }
+  }
+
+  cpu_options {
+    core_count       = 4
+    threads_per_core = 2
+  }
+
+  disable_api_termination = true
+
+  ebs_optimized = true
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.o4bproject_ec2_iam_instance_profile.name
+  }
+
+  image_id = aws_ami.varnish_ami.id
+
+  instance_initiated_shutdown_behavior = "terminate"
+
+  instance_type = var.ec2_instance_type["magento"]
+
+  key_name = var.key_name
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
+
+  monitoring {
+    enabled = true
+  }
+
+  network_interfaces {
+    associate_public_ip_address = true
+  }
+
+  placement {
+    availability_zone = var.private_subnet_availability_zone
+  }
+
+  vpc_security_group_ids = [aws_security_group.o4bproject_dev_ec2_private_sg.id]
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "ampdev-ec2-launch-template"
+      Environment = "dev"
+    }
+  }
+  user_data = file("install_varnish.sh")
 }
 
 # Create Auto scaling group for private subnet

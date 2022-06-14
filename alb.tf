@@ -6,7 +6,7 @@ resource "aws_lb" "o4bproject_outer_alb" {
   subnets            = [aws_subnet.o4bproject-public[0].id, aws_subnet.o4bproject-public[1].id]
 
   enable_deletion_protection = false
-/*
+  /*
   access_logs {
     bucket  = aws_s3_bucket.o4bproject_outer_lb_bucket.id
     prefix  = "AmpDevO4b-outer-alb"
@@ -83,7 +83,7 @@ resource "aws_lb" "o4bproject_inner_alb" {
   subnets            = [aws_subnet.o4bproject-private[0].id, aws_subnet.o4bproject-private[1].id]
 
   enable_deletion_protection = false
-/*
+  /*
   access_logs {
     bucket  = aws_s3_bucket.o4bproject_inner_lb_bucket.id
     prefix  = "AmpDevO4b-inner-alb"

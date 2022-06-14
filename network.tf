@@ -107,6 +107,7 @@ resource "aws_vpc_dhcp_options_association" "o4bproject-dhcp-association" {
 
 # Create elastic ip
 resource "aws_eip" "o4bproject-eip-nat-gateway" {
+  count                     = var.item_count
   vpc                       = true
   associate_with_private_ip = "172.19.1.167"
   depends_on                = [aws_internet_gateway.o4bproject-igw]
@@ -119,7 +120,7 @@ resource "aws_eip" "o4bproject-eip-nat-gateway" {
 
 # Create NAT gateway
 resource "aws_nat_gateway" "o4bproject-nat-gateway" {
-  allocation_id = aws_eip.o4bproject-eip-nat-gateway.id
+  allocation_id = aws_eip.o4bproject-eip-nat-gateway[count.index].id
   count         = var.item_count
   subnet_id     = aws_subnet.o4bproject-public[count.index].id
   depends_on    = [aws_eip.o4bproject-eip-nat-gateway]
@@ -132,7 +133,7 @@ resource "aws_nat_gateway" "o4bproject-nat-gateway" {
 
 # Route private subnet traffic through NAT gateway
 resource "aws_route" "o4bproject-nat-gateway-route" {
-  count = var.item_count
+  count                  = var.item_count
   route_table_id         = aws_route_table.private-route-table.id
   nat_gateway_id         = aws_nat_gateway.o4bproject-nat-gateway[count.index].id
   destination_cidr_block = "0.0.0.0/0"
