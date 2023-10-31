@@ -20,7 +20,7 @@ resource "aws_launch_configuration" "o4bproject_ec2_private_launch_configuration
 
   root_block_device {
     volume_type = "gp2"
-    volume_size = 20
+    volume_size = 50
     encrypted = true
   }
 
