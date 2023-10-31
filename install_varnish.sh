@@ -28,7 +28,7 @@ make install
 # whitelist.vcl 
 # default.vcl 
 
-# TODO create /etc/varnish/default.vcl
+# create /etc/varnish/default.vcl
 
 # The AMI will need to launch with this command
 varnishd -p vcl_path=/etc/varnish/ -a :80 -f /etc/varnish/default.vcl -p http_max_hdr=128

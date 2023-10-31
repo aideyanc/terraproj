@@ -53,7 +53,7 @@ variable "ec2_instance_type" {
 
 variable "key_name" {
   description = "key pair for creating ec2 instances"
-  default     = ""
+  default     = "my-key-pair"
 }
 
 variable "desired_capacity" {

@@ -64,9 +64,9 @@ resource "aws_launch_template" "o4bproject_ec2_launch_template" {
   iam_instance_profile {
     name = aws_iam_instance_profile.o4bproject_ec2_iam_instance_profile.name
   }
-
+/*
   image_id = aws_ami.varnish_ami.id
-
+*/
   instance_initiated_shutdown_behavior = "terminate"
 
   instance_type = var.ec2_instance_type["magento"]
@@ -89,7 +89,7 @@ resource "aws_launch_template" "o4bproject_ec2_launch_template" {
   }
 
   placement {
-    availability_zone = var.private_subnet_availability_zone
+    availability_zone = [var.private_subnet_availability_zone]
   }
 
   vpc_security_group_ids = [aws_security_group.o4bproject_dev_ec2_private_sg.id]

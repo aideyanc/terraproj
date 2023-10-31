@@ -10,7 +10,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Tue May 31 05:37:51 2022
+# Make data base, printed on Tue Jun 14 15:23:20 2022
 
 # Variables
 
@@ -20,23 +20,20 @@ make: *** No rule to make target `all'.  Stop.
 ?F = $(notdir $?)
 # environment
 VSCODE_LOG_NATIVE = false
-# environment
-NODENV_SHELL = zsh
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
 # automatic
 @D = $(patsubst %/,%,$(dir $@))
 # automatic
 @F = $(notdir $@)
 # makefile
-CURDIR := /Users/carltonaideyan/src/online4baby-terraform
+CURDIR := /Users/sebastinebradley/Desktop/online4b/online4baby-terraform
 # makefile
 SHELL = /bin/sh
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-gb","availableLanguages":{},"_languagePackSupport":true}
 # environment
 _ = /usr/bin/make
-# automatic
- 
-?D = $(patsubst %/,%,$(dir $?))
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
 # environment
@@ -44,13 +41,11 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/ww/zh8rndwx4l997qp6bjw8f_900000gp/T/vscode-ipc-4d2fa614-96ec-47c5-91c4-4696d42a6d88.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/7f/wvh0ttw962l494mjyhj7l8140000gn/T/vscode-ipc-4a5eb16c-e97c-4c2b-9e59-c22d4a438f54.sock
 # environment
 VSCODE_CWD = /
 # environment
-PATH = /usr/local/opt/coreutils/libexec/gnubin:/Users/carltonaideyan/.nodenv/shims:/Users/carltonaideyan/.nodenv/shims:/Users/carltonaideyan/.nodenv/bin:/Users/carltonaideyan/.strap/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
-# environment
-LaunchInstanceID = F73AA793-DD53-434D-A541-B017307041D2
+PATH = /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/VMware Fusion.app/Contents/Public:/Library/Apple/usr/bin
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -58,27 +53,27 @@ ELECTRON_RUN_AS_NODE = 1
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.PH2aN6a3XV/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.N4vEZaGt1A/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /Users/carltonaideyan/src/online4baby-terraform
+PWD = /Users/sebastinebradley/Desktop/online4b/online4baby-terraform
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = undefined
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /Users/carltonaideyan
+HOME = /Users/sebastinebradley
 # default
 MAKEFILEPATH = $(shell /usr/bin/xcode-select -print-path 2>/dev/null || echo /Developer)/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/carltonaideyan/Library/Application Support/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+VSCODE_CODE_CACHE_PATH = /Users/sebastinebradley/Library/Application Support/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
 # environment
-LOGNAME = carltonaideyan
+LOGNAME = sebastinebradley
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
@@ -90,11 +85,11 @@ MAKE = $(MAKE_COMMAND)
 # default
 MAKECMDGOALS := all
 # environment
-SHLVL = 1
+SHLVL = 2
 # default
 MAKE_VERSION := 3.81
 # environment
-USER = carltonaideyan
+USER = sebastinebradley
 # makefile
 .DEFAULT_GOAL := terraform
 # automatic
@@ -104,11 +99,11 @@ MAKE_COMMAND := /Library/Developer/CommandLineTools/usr/bin/make
 # default
 .VARIABLES := 
 # environment
-TMPDIR = /var/folders/ww/zh8rndwx4l997qp6bjw8f_900000gp/T/
+TMPDIR = /var/folders/7f/wvh0ttw962l494mjyhj7l8140000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/carltonaideyan/Library/Application Support/Code/1.67.2-main.sock
+VSCODE_IPC_HOOK = /Users/sebastinebradley/Library/Application Support/Code/1.67.2-main.sock
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -116,13 +111,13 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.2643238.2644915
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.31730309.31730315
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
 +F = $(notdir $+)
 # environment
-__CF_USER_TEXT_ENCODING = 0x1F6:0:2
+__CF_USER_TEXT_ENCODING = 0x1F5:0:2
 # environment
 COMMAND_MODE = unix2003
 # default
@@ -130,11 +125,7 @@ MAKEFILES :=
 # automatic
 <F = $(notdir $<)
 # environment
-HOMEBREW_BUNDLE_NO_LOCK = 1
-# environment
 LC_ALL = C
-# environment
-SECURITYSESSIONID = 186a5
 # automatic
 ^F = $(notdir $^)
 # default
@@ -146,11 +137,9 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 1507
-# environment
-COMPOSER_MEMORY_LIMIT = -1
+VSCODE_PID = 17471
 # variable set hash-table stats:
-# Load=67/1024=7%, Rehash=0, Collisions=2/91=2%
+# Load=62/1024=6%, Rehash=0, Collisions=1/86=1%
 
 # Pattern-specific Variable Values
 
@@ -158,9 +147,9 @@ COMPOSER_MEMORY_LIMIT = -1
 
 # Directories
 
-# . (device 16777220, inode 1287779): 28 files, no impossibilities.
+# . (device 16777220, inode 31729963): 27 files, no impossibilities.
 
-# 28 files, no impossibilities in 1 directories.
+# 27 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -209,14 +198,14 @@ push:
 #  commands to execute (from `Makefile', line 19):
 	git status
 	git add .
-	git commit -m "a few modifications to security groups, variables, provider, asg, S3 and a few additions including magento and varnish instances"
+	git commit -m "a few modifications applied"
 	git push
 	
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-30 01:36:42
+#  Last modified 2022-06-14 15:17:28
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -259,6 +248,6 @@ destroy:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Tue May 31 05:37:51 2022
+# Finished Make data base on Tue Jun 14 15:23:20 2022
 
  
